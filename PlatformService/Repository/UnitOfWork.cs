@@ -10,11 +10,13 @@ namespace PlatformService.Repository
         private readonly DataContext _context;
         private IDbContextTransaction _transaction;
 
-        public UnitOfWork(DataContext context)
+        public UnitOfWork(DataContext context, IPlatform platform)
         {
             _context = context;
+            Platform = platform;
         }
 
+        public IPlatform Platform { get; private set; }
         public async Task<int> Complete() => await _context.SaveChanges();
         public async void Cancel() => await _context.DisposeAsync();
         public void Dispose() => _context.Dispose();

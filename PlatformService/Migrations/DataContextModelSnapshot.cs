@@ -25,6 +25,9 @@ namespace PlatformService.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Cost")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
 
@@ -37,9 +40,12 @@ namespace PlatformService.Migrations
                     b.Property<string>("PlatformName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Publisher")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
-                    b.ToTable("DbSet");
+                    b.ToTable("Platform");
                 });
 #pragma warning restore 612, 618
         }

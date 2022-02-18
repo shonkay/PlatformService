@@ -1,8 +1,8 @@
-﻿using System;
+﻿using PlatformService.Models;
 
-namespace PlatformService.Models
+namespace PlatformService.DTOs
 {
-    public class Platform : BaseModel
+    public class ReadPlatformDTO : BaseModel
     {
         public string PlatformName { get; set; }
         public string Publisher { get; set; }

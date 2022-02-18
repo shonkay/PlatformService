@@ -11,6 +11,7 @@ using Microsoft.OpenApi.Models;
 using PlatformService.Context;
 using PlatformService.Interface;
 using PlatformService.Repository;
+using PlatformService.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +32,9 @@ namespace PlatformService
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddTransient<IPlatform, PlatformRepository>().AddTransient<PlatformServices>();
             services.AddTransient(typeof(IGeneric<>), typeof(GenericRepository<>));
             services.AddControllers();
             services.AddSwaggerGen(c =>

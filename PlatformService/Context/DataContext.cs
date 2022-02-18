@@ -11,7 +11,7 @@ namespace PlatformService.Context
 
         }
 
-        public virtual DbSet<Platform> DbSet { get; set; }
+        public virtual DbSet<Platform> Platform { get; set; }
 
         public async Task<int> SaveChanges()
         {
