@@ -5,6 +5,7 @@ using PlatformService.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace PlatformService.Services
@@ -29,7 +30,8 @@ namespace PlatformService.Services
             return new ResponseModel
             {
                 ResponseMessage = $"Found {query.Count()} Records",
-                ResponseObject = map
+                ResponseObject = map,
+                ResponseCode = HttpStatusCode.OK
             };
         }
 
@@ -47,30 +49,46 @@ namespace PlatformService.Services
             return new ResponseModel
             {
                 ResponseMessage = $"Found Platform With Id {Id}",
-                ResponseObject = map
+                ResponseObject = map,
+                ResponseCode = HttpStatusCode.OK
             };
         }
 
         public async Task<ResponseModel> CreatePlatform(CreatePlatformDTO createPlatform)
         {
-            var platformMap = new Platform
+            var check = await _unitOfWork.Platform.GetByPlatformName(createPlatform.PlatformName);
+            if(check == null)
             {
-                Id = Guid.NewGuid(),
-                DateCreated = DateTime.Now,
-                DateModified = DateTime.Now,
-                Isdeleted = false,
-                Cost = createPlatform.Cost,
-                PlatformName = createPlatform.PlatformName,
-                Publisher = createPlatform.Publisher
-            };
+                var platformMap = new Platform
+                {
+                    Id = Guid.NewGuid(),
+                    DateCreated = DateTime.Now,
+                    DateModified = DateTime.Now,
+                    Isdeleted = false,
+                    Cost = createPlatform.Cost,
+                    PlatformName = createPlatform.PlatformName,
+                    Publisher = createPlatform.Publisher
+                };
 
-            _unitOfWork.Platform.Add(platformMap);
-            await _unitOfWork.Complete();
+                _unitOfWork.Platform.Add(platformMap);
+                await _unitOfWork.Complete();
 
-            return new ResponseModel
+                return new ResponseModel
+                {
+                    ResponseMessage = $"{platformMap.PlatformName} Created Successfully",
+                    ResponseCode = HttpStatusCode.OK
+                };
+            }
+            else
             {
-                ResponseMessage = $"{platformMap.PlatformName} Created Successfully"
-            };
+                return new ResponseModel
+                {
+                    ResponseMessage = $"{check.PlatformName} Already Exist",
+                    ResponseObject = check,
+                    ResponseCode = HttpStatusCode.BadRequest
+                };
+            }
+           
 
         }
 
