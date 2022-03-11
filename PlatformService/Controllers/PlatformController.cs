@@ -18,12 +18,40 @@ namespace PlatformService.Controllers
             _platform = platform;
         }
 
-        [HttpGet]
+        [HttpGet("[action]")]
         public async Task<IActionResult> GetPlatforms()
         {
             try
             {
                 var result = await _platform.GetAllPlatform();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        [HttpGet("[action]/{Id}")]
+        public async Task<IActionResult> GetPlatform(Guid Id)
+        {
+            try
+            {
+                var result = await _platform.GetByPlatformId(Id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> CreatePlatforms(CreatePlatformDTO platformDTO)
+        {
+            try
+            {
+                var result = await _platform.CreatePlatform(platformDTO);
                 return Ok(result);
             }
             catch (Exception ex)
